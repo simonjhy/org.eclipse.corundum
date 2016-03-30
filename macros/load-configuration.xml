@@ -41,7 +41,7 @@
           <var name=".repositories" unset="true"/>
 
           <if>
-            <isset property="@{name}.legacy.mac.layout"/>
+            <not><isset property="@{name}.legacy.mac.layout"/></not>
             <then>
               <var name="@{name}.legacy.mac.layout" value="false"/>
             </then>
