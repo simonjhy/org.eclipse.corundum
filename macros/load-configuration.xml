@@ -18,39 +18,36 @@
     <sequential>
 
       <if>
-        <not><isset property="repositories.@{name}"/></not>
+        <not><isset property="@{name}.repositories.resolved"/></not>
         <then>
 
           <echo message="Loading configuration @{name}..."/>
 
-          <property file="${releng.dir}/repositories-@{name}.properties" prefix="."/>
-
           <if>
-            <isset property=".p2.repositories"/>
+            <isset property="@{name}.repositories"/>
             <then>
-              <for list="${.p2.repositories}" param="repo">
+              <propertycopy name=".repositories" from="@{name}.repositories"/>
+              <for list="${.repositories}" param="repo">
                 <sequential>
-                  <load-repository location="@{repo}" property="repositories.@{name}"/>
+                  <load-repository location="@{repo}" property="@{name}.repositories.resolved"/>
                 </sequential>
               </for>
             </then>
-          </if>
-          
-          <if>
-            <istrue value="${.legacy.mac.layout}"/>
-            <then>
-              <var name="legacy.mac.layout.@{name}" value="true"/>
-            </then>
             <else>
-              <var name="legacy.mac.layout.@{name}" value="false"/>
+              <fail message="Could not load configuration @{name}"/>
             </else>
           </if>
           
-          <post-load-configuration name="@{name}"/>
+          <var name=".repositories" unset="true"/>
 
-          <var name=".eclipse.platform.build" unset="true"/>
-          <var name=".p2.repositories" unset="true"/>
-          <var name=".legacy.mac.layout" unset="true"/>
+          <if>
+            <isset property="@{name}.legacy.mac.layout"/>
+            <then>
+              <var name="@{name}.legacy.mac.layout" value="false"/>
+            </then>
+          </if>
+          
+          <post-load-configuration name="@{name}"/>
 
         </then>
       </if>

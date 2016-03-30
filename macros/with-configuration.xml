@@ -19,8 +19,8 @@
     <sequential>
 
       <load-configuration name="@{name}"/>
-      <propertycopy property=".repositories" from="repositories.@{name}" override="true"/>
-      <propertycopy property=".legacy.mac.layout" from="legacy.mac.layout.@{name}" override="true"/>
+      <propertycopy property=".repositories" from="@{name}.repositories.resolved" override="true"/>
+      <propertycopy property=".legacy.mac.layout" from="@{name}.legacy.mac.layout" override="true"/>
       <body/>
       <var name=".repositories" unset="true"/>
       <var name=".legacy.mac.layout" unset="true"/>
