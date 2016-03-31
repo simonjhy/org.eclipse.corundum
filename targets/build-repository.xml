@@ -13,7 +13,7 @@
 
 <project name="corundum.target.build-repository">
 
-  <target name="build-repository" depends="init-jdk,install-builder">
+  <target name="build-repository" depends="install-builder">
     <build-repository/>
   </target>
   

@@ -57,16 +57,100 @@
       <append property=".pde.build.args" value="-DjavacDebugInfo=true" separator=" "/>
       <append property=".pde.build.args" value="-DjavacVerbose=false" separator=" "/>
       
-      <for list="${jdk.versions}" param="version" delimiter=",">
+      <!-- Provide the build with the required JDKs based on what's specified in the plugin manifests -->
+      
+      <for param="manifest">
+        <fileset dir="@{source}/plugins" includes="*/META-INF/MANIFEST.MF"/>
         <sequential>
-          <propertycopy name=".java.system.classpath" from="java.@{version}.system.classpath" override="true"/>
-          <append property=".pde.build.args" value="-DJavaSE-1.@{version}=${.java.system.classpath}" separator=" "/>
+
+          <var name=".plugin" unset="true"/>          
+          <var name=".manifest" unset="true"/>
+          <var name=".env" unset="true"/>
+          <var name=".version" unset="true"/>
+          
+          <propertyregex property=".plugin" input="@{manifest}" regexp=".*[/\\]([^/\\]+)[/\\]META-INF[/\\]MANIFEST.MF" select="\1"/>
+          
+          <loadfile property=".manifest" srcFile="@{manifest}"/>
+          <propertyregex property=".env" input="${.manifest}" regexp="Bundle-RequiredExecutionEnvironment: ([a-zA-Z0-9\.\-]+)" select="\1"/>
+          <var name=".manifest" unset="true"/>
+          
+          <if>
+            <isset property=".env"/>
+            <then>
+          
+              <propertyregex property=".version" input="${.env}" regexp="JavaSE-1.([0-9]+)" select="\1"/>
+          
+              <if>
+                <not><isset property=".version"/></not>
+                <then>
+                  <propertyregex property=".version" input="${.env}" regexp="J2SE-1.([0-9])" select="\1"/>
+                </then>
+              </if>
+            
+              <if>
+                <not><isset property=".version"/></not>
+                <then>
+                  <fail message="Could not recognize execution environment ${.env} of ${.plugin} plugin"/>
+                </then>
+              </if>
+          
+              <var name=".env" unset="true"/>
+          
+            </then>
+            <else>
+            
+              <echo message="Plugin ${.plugin} does not specify Bundle-RequiredExecutionEnvironment"/>
+              <var name=".version" value="8"/>
+              
+            </else>
+          </if>
+          
+          <if>
+            <not><contains string="${.jdk.versions}" substring="#${.version}#"/></not>
+            <then>
+              <init-jdk version="${.version}"/>
+              <append property=".jdk.versions" value="#${.version}#" separator=","/>
+            </then>
+          </if>
+          
+          <var name=".version" unset="true"/>
+          <var name=".plugin" unset="true"/>
+          
+        </sequential>
+      </for>
+      
+      <for list="${.jdk.versions}" param="version" delimiter=",">
+        <sequential>
+        
+          <propertyregex property=".version" override="true" input="@{version}" regexp="#([0-9]+)#" select="\1"/>
+        
+          <if>
+            <or>
+              <equals arg1="${.version}" arg2="5"/>
+              <equals arg1="${.version}" arg2="4"/>
+              <equals arg1="${.version}" arg2="3"/>
+              <equals arg1="${.version}" arg2="2"/>
+            </or>
+            <then>
+              <var name=".env" value="J2SE-1.${.version}"/>
+            </then>
+            <else>
+              <var name=".env" value="JavaSE-1.${.version}"/>
+            </else>
+          </if>
+          
+          <propertycopy name=".java.system.classpath" from="java.${.version}.system.classpath" override="true"/>
+          <append property=".pde.build.args" value="-D${.env}=${.java.system.classpath}" separator=" "/>
+          
           <var name=".java.system.classpath" unset="true"/>
+          <var name=".env" unset="true"/>
+          <var name=".version" unset="true"/>
+          
         </sequential>
       </for>
       
       <!-- Copy bundles from the target as PDE Build tends to pick up wrong versions of bundles when the
-           target uses a shared bundle pool. -->
+           target uses a shared bundle pool -->
       
       <for-each-eclipse-bundle eclipse="@{target}">
         <if>

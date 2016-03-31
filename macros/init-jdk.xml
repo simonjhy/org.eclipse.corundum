@@ -17,47 +17,54 @@
     <attribute name="version"/>
     <sequential>
 
-      <var name=".location" unset="true"/>
-      <var name=".prefix" unset="true"/>
-      <var name=".compiler.path" unset="true"/>
-      <var name=".system.classpath" unset="true"/>
-
-      <locate-jdk version="@{version}"/>
-      <propertycopy property=".location" from="java.@{version}.location"/>
-
-      <property name=".prefix" value="java.@{version}"/>
+      <var name=".prefix" value="java.@{version}"/>
 
       <if>
-        <os family="windows"/>
+        <not><isset property="${.prefix}.location"/></not>
         <then>
-          <property name=".compiler.path" value="${.location}/bin/javac.exe"/>
+        
+          <var name=".location" unset="true"/>
+          <var name=".compiler.path" unset="true"/>
+          <var name=".system.classpath" unset="true"/>
+          
+          <locate-jdk version="@{version}"/>
+          <propertycopy property=".location" from="${.prefix}.location"/>
+
+          <if>
+            <os family="windows"/>
+            <then>
+              <property name=".compiler.path" value="${.location}/bin/javac.exe"/>
+            </then>
+            <else>
+              <property name=".compiler.path" value="${.location}/bin/javac"/>
+            </else>
+          </if>
+
+          <pathconvert property=".system.classpath">
+            <fileset dir="${.location}">
+              <include name="lib/*.jar"/>
+              <include name="jre/lib/*.jar"/>
+            </fileset>
+            <fileset dir="${.location}/..">   <!-- Accounts for Java 6 layout on Mac OS X -->
+              <include name="Classes/*.jar"/>
+            </fileset>
+          </pathconvert>
+
+          <property name="${.prefix}.compiler.path" value="${.compiler.path}"/>
+          <property name="${.prefix}.system.classpath" value="${.system.classpath}"/>
+
+          <echo message="Java @{version} Compiler Path : ${.compiler.path}"/>
+          <echo message="Java @{version} System Classpath : ${.system.classpath}"/>
+
+          <var name=".location" unset="true"/>
+          <var name=".compiler.path" unset="true"/>
+          <var name=".system.classpath" unset="true"/>
+          
         </then>
-        <else>
-          <property name=".compiler.path" value="${.location}/bin/javac"/>
-        </else>
       </if>
 
-      <pathconvert property=".system.classpath">
-        <fileset dir="${.location}">
-          <include name="lib/*.jar"/>
-          <include name="jre/lib/*.jar"/>
-        </fileset>
-        <fileset dir="${.location}/..">   <!-- Accounts for Java 6 layout on Mac OS X -->
-          <include name="Classes/*.jar"/>
-        </fileset>
-      </pathconvert>
-
-      <property name="${.prefix}.compiler.path" value="${.compiler.path}"/>
-      <property name="${.prefix}.system.classpath" value="${.system.classpath}"/>
-
-      <echo message="Java @{version} Compiler Path : ${.compiler.path}"/>
-      <echo message="Java @{version} System Classpath : ${.system.classpath}"/>
-
-      <var name=".location" unset="true"/>
       <var name=".prefix" unset="true"/>
-      <var name=".compiler.path" unset="true"/>
-      <var name=".system.classpath" unset="true"/>
-
+      
     </sequential>
   </macrodef>
 

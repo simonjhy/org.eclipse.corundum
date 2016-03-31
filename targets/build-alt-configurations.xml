@@ -23,7 +23,7 @@
     processing or produce consumable binaries.
   -->
 
-  <target name="build-alt-configurations" depends="init-jdk,install-builder">
+  <target name="build-alt-configurations" depends="install-builder">
 
     <for-each-configuration>
       <if>

@@ -13,7 +13,7 @@
 
 <project name="corundum.target.build-configuration">
 
-  <target name="build-configuration" depends="init-jdk,install-builder">
+  <target name="build-configuration" depends="install-builder">
   
     <fail unless="name" message="Must specify name property"/>
     
