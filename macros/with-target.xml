@@ -11,12 +11,19 @@
  ******************************************************************************
 -->
 
-<project name="corundum.macro.post-load-configuration">
+<project name="corundum.macro.with-target">
 
-  <macrodef name="post-load-configuration">
+  <macrodef name="with-target">
     <attribute name="name"/>
+    <element name="body" implicit="yes"/>
     <sequential>
+
+      <install-target name="@{name}"/>
+      <propertycopy property=".target" from="target-@{name}" override="true"/>
+      <body/>
+      <var name=".target" unset="true"/>
+
     </sequential>
   </macrodef>
-  
+
 </project>

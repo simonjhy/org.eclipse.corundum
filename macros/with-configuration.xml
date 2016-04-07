@@ -18,11 +18,58 @@
     <element name="body" implicit="yes"/>
     <sequential>
 
-      <load-configuration name="@{name}"/>
+      <if>
+        <not><isset property="@{name}.repositories.resolved"/></not>
+        <then>
+
+          <echo message="Loading configuration @{name}..."/>
+
+          <if>
+            <isset property="@{name}.repositories"/>
+            <then>
+              <propertycopy name=".repositories" from="@{name}.repositories"/>
+              <for list="${.repositories}" param="repo">
+                <sequential>
+                  <load-repository location="@{repo}" property="@{name}.repositories.resolved"/>
+                </sequential>
+              </for>
+            </then>
+            <else>
+              <fail message="Could not load configuration @{name}"/>
+            </else>
+          </if>
+          
+          <var name=".repositories" unset="true"/>
+
+        </then>
+      </if>
+
       <propertycopy property=".repositories" from="@{name}.repositories.resolved" override="true"/>
-      <propertycopy property=".legacy.mac.layout" from="@{name}.legacy.mac.layout" override="true"/>
+      
+      <if>
+        <isset property="@{name}.java.version"/>
+        <then>
+          <propertycopy property=".java.version" from="@{name}.java.version" override="true"/>
+        </then>
+        <else>
+          <var name=".java.version" unset="true"/>
+        </else>
+      </if>
+      
+      <if>
+        <isset property="@{name}.legacy.mac.layout"/>
+        <then>
+          <propertycopy property=".legacy.mac.layout" from="@{name}.legacy.mac.layout" override="true"/>
+        </then>
+        <else>
+          <var name=".legacy.mac.layout" value="false"/>
+        </else>
+      </if>
+      
       <body/>
+      
       <var name=".repositories" unset="true"/>
+      <var name=".java.version" unset="true"/>
       <var name=".legacy.mac.layout" unset="true"/>
 
     </sequential>

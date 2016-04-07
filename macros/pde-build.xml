@@ -57,7 +57,19 @@
       <append property=".pde.build.args" value="-DjavacDebugInfo=true" separator=" "/>
       <append property=".pde.build.args" value="-DjavacVerbose=false" separator=" "/>
       
-      <!-- Provide the build with the required JDKs based on what's specified in the plugin manifests -->
+      <!-- Provide the build with the required JDKs based on what's required by the target and what's specified in the plugin manifests -->
+      
+      <var name=".jdk.versions" unset="true"/>
+      
+      <with-configuration name="@{target}">
+        <if>
+          <isset property=".java.version"/>
+          <then>
+            <init-jdk version="${.java.version}"/>
+            <property name=".jdk.versions" value="#${.java.version}#"/>
+          </then>
+        </if>
+      </with-configuration>
       
       <for param="manifest">
         <fileset dir="@{source}/plugins" includes="*/META-INF/MANIFEST.MF"/>
@@ -149,22 +161,26 @@
         </sequential>
       </for>
       
+      <var name=".jdk.versions" unset="true"/>
+      
       <!-- Copy bundles from the target as PDE Build tends to pick up wrong versions of bundles when the
            target uses a shared bundle pool -->
       
-      <for-each-eclipse-bundle eclipse="@{target}">
-        <if>
-          <available file="${.bundle.location}" type="dir"/>
-          <then>
-            <copy todir="${build.dir}/pde/target/plugins/${.bundle.file.name}">
-              <fileset dir="${.bundle.location}"/>
-            </copy>
-          </then>
-          <else>
-            <copy file="${.bundle.location}" tofile="${build.dir}/pde/target/plugins/${.bundle.file.name}"/>
-          </else>
-        </if>
-      </for-each-eclipse-bundle>
+      <with-target name="@{target}">
+        <for-each-eclipse-bundle eclipse="${.target}">
+          <if>
+            <available file="${.bundle.location}" type="dir"/>
+            <then>
+              <copy todir="${build.dir}/pde/target/plugins/${.bundle.file.name}">
+                <fileset dir="${.bundle.location}"/>
+              </copy>
+            </then>
+            <else>
+              <copy file="${.bundle.location}" tofile="${build.dir}/pde/target/plugins/${.bundle.file.name}"/>
+            </else>
+          </if>
+        </for-each-eclipse-bundle>
+      </with-target>
       
       <eclipse location="${builder}" application="org.eclipse.ant.core.antRunner">
         <arg line="-clean"/>

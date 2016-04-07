@@ -21,9 +21,7 @@
 
       <locate-source/>
       
-      <with-target-platform configuration="@{name}">
-        <pde-build source="${source.location}" target="${.target.platform}" feature="${root.feature}" build.id="${DSTAMP}"/>
-      </with-target-platform>
+      <pde-build source="${source.location}" target="@{name}" feature="${root.feature}" build.id="${DSTAMP}"/>
 
       <delete file="${build.dir}/${root.feature}-${DSTAMP}.zip"/>
       

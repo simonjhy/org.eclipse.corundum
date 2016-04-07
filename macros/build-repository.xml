@@ -49,9 +49,7 @@
 
           <!-- Stage 3 -->
 
-          <with-target-platform configuration="${configuration.recommended}">
-            <pde-build source="${source.location}" target="${.target.platform}" feature="${root.feature}" build.id="${DSTAMP}" warnings="true"/>
-          </with-target-platform>
+          <pde-build source="${source.location}" target="${configuration.recommended}" feature="${root.feature}" build.id="${DSTAMP}" warnings="true"/>
 
           <unzip src="${source.location}/build/${root.feature}-${DSTAMP}.zip" dest="${build.dir}/repository">
             <mapper type="regexp" from="^eclipse/(.*)$$" to="\1"/>
@@ -79,13 +77,13 @@
             <fileset dir="${build.dir}/repository/plugins"/>
           </move>
 
-          <with-target-platform configuration="${configuration.min}">
-            <create-inventory eclipse="${.target.platform}" dest="${build.dir}/repository/temp/min-platform-inventory.txt"/>
-          </with-target-platform>
+          <with-target name="${configuration.min}">
+            <create-inventory eclipse="${.target}" dest="${build.dir}/repository/temp/min-platform-inventory.txt"/>
+          </with-target>
 
-          <with-target-platform configuration="${configuration.max}">
-            <create-inventory eclipse="${.target.platform}" dest="${build.dir}/repository/temp/max-platform-inventory.txt"/>
-          </with-target-platform>
+          <with-target name="${configuration.max}">
+            <create-inventory eclipse="${.target}" dest="${build.dir}/repository/temp/max-platform-inventory.txt"/>
+          </with-target>
 
           <set-bundle-version-constraints
             minPlatformInventory="${build.dir}/repository/temp/min-platform-inventory.txt"

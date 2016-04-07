@@ -41,8 +41,8 @@
           <var name=".aux.xml" unset="true"/>
           <var name=".aux.xml.contribution" unset="true"/>
 
-          <with-target-platform configuration="${configuration.recommended}">
-            <for-each-eclipse-bundle eclipse="${.target.platform}">
+          <with-target name="${configuration.recommended}">
+            <for-each-eclipse-bundle eclipse="${.target}">
               <if>
                 <available file="${.bundle.location}" type="dir"/>
                 <then>
@@ -61,7 +61,7 @@
               <append property=".aux.xml" value="${.aux.xml.contribution}" separator="&lt;/AuxClasspathEntry&gt;&#xA;&lt;AuxClasspathEntry&gt;"/>
               <var name=".aux.xml.contribution" unset="true"/>
             </for-each-eclipse-bundle>
-          </with-target-platform>
+          </with-target>
           
           <pathconvert property=".source.xml" pathsep="&lt;/SrcDir&gt;&#xA;&lt;SrcDir&gt;">
             <path>

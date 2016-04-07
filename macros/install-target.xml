@@ -11,17 +11,27 @@
  ******************************************************************************
 -->
 
-<project name="corundum.macro.with-target-platform">
+<project name="corundum.macro.install-target">
 
-  <macrodef name="with-target-platform">
-    <attribute name="configuration"/>
-    <element name="body" implicit="yes"/>
+  <macrodef name="install-target">
+    <attribute name="name"/>
     <sequential>
 
-      <install-target-platform configuration="@{configuration}"/>
-      <propertycopy property=".target.platform" from="target-@{configuration}" override="true"/>
-      <body/>
-      <var name=".target.platform" unset="true"/>
+      <if>
+        <not><isset property="target-@{name}"/></not>
+        <then>
+
+          <property name="target-@{name}" value="${build.dir}/target-@{name}"/>
+
+          <if>
+            <not><available file="${build.dir}/target-@{name}"/></not>
+            <then>
+              <install-eclipse dest="${build.dir}/target-@{name}" configuration="@{name}" extensions="${iu.build.target}"/>
+            </then>
+          </if>
+
+        </then>
+      </if>
 
     </sequential>
   </macrodef>
