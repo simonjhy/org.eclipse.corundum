@@ -11,21 +11,14 @@
  ******************************************************************************
 -->
 
-<project name="corundum.target.p2-publish">
+<project name="corundum.target.p2-mirror">
 
-  <target name="p2-publish" depends="install-builder">
+  <target name="p2-mirror" depends="install-builder">
   
-    <fail unless="location" message="Must specify property &quot;location&quot;"/>
+    <fail unless="source" message="Must specify property &quot;source&quot;"/>
+    <fail unless="destination" message="Must specify property &quot;destination&quot;"/>
     
-    <if>
-      <isset property="name"/>
-      <then>
-        <p2-publish location="${location}" name="${name}"/>
-      </then>
-      <else>
-        <p2-publish location="${location}"/>
-      </else>
-    </if>
+    <p2-mirror source="${source}" destination="${destination}"/>
     
   </target>
   

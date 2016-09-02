@@ -15,8 +15,8 @@
 
   <target name="find-eclipse-bundle" depends="init-corundum">
   
-    <fail unless="eclipse" message="Must specify eclipse property"/>
-    <fail unless="bundle" message="Must specify bundle property"/>
+    <fail unless="eclipse" message="Must specify property &quot;eclipse&quot;"/>
+    <fail unless="bundle" message="Must specify property &quot;bundle&quot;"/>
     
     <find-eclipse-bundle property="location" eclipse="${eclipse}" bundle="${bundle}"/>
     

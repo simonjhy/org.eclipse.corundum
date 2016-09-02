@@ -15,7 +15,7 @@
 
   <target name="list-eclipse-bundles" depends="init-corundum">
   
-    <fail unless="eclipse" message="Must specify eclipse property"/>
+    <fail unless="eclipse" message="Must specify property &quot;eclipse&quot;"/>
     
     <for-each-eclipse-bundle eclipse="${eclipse}">
       <echo/>

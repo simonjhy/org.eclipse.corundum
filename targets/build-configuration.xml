@@ -15,7 +15,7 @@
 
   <target name="build-configuration" depends="install-builder">
   
-    <fail unless="name" message="Must specify name property"/>
+    <fail unless="name" message="Must specify property &quot;name&quot;"/>
     
     <build-configuration name="${name}"/>
 
