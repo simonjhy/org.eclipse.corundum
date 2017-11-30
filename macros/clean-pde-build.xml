@@ -35,7 +35,7 @@
           <include name="*/@dot.log"/>
           <include name="*/.apt_generated/**"/>
           <include name="*/.resources/**"/>
-          <include name="org.eclipse.*.source_*/**"/>
+          <include name="*.source_*/**"/>
           <exclude name="**/.do-not-delete"/>
         </fileset>
         <fileset dir="@{source}/features">
