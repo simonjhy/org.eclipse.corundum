@@ -14,7 +14,7 @@ package org.eclipse.corundum;
 import org.apache.tools.ant.Task;
 
 /**
- * @author <a href="konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="konstantin@komissarchik.net">Konstantin Komissarchik</a>
  */
 
 public final class AntTaskOperationContext extends OperationContext

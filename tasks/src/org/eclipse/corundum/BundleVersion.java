@@ -14,7 +14,7 @@ package org.eclipse.corundum;
 import static java.lang.Math.min;
 
 /**
- * @author <a href="konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="konstantin@komissarchik.net">Konstantin Komissarchik</a>
  */
 
 public final class BundleVersion implements Comparable<BundleVersion>

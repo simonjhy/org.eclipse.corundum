@@ -19,7 +19,7 @@ import org.eclipse.corundum.AntTaskOperationContext;
 import org.eclipse.corundum.FileSystemExcludes;
 
 /**
- * @author <a href="konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="konstantin@komissarchik.net">Konstantin Komissarchik</a>
  */
 
 public final class GenRepositoryLandingTask extends Task

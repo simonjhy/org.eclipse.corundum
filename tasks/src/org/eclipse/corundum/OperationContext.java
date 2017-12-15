@@ -14,7 +14,7 @@ package org.eclipse.corundum;
 import java.io.File;
 
 /**
- * @author <a href="konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="konstantin@komissarchik.net">Konstantin Komissarchik</a>
  */
 
 public class OperationContext

@@ -24,7 +24,7 @@ import org.eclipse.corundum.OperationContext;
 import org.eclipse.corundum.listing.GenFolderListingOp;
 
 /**
- * @author <a href="konstantin.komissarchik@oracle.com">Konstantin Komissarchik</a>
+ * @author <a href="konstantin@komissarchik.net">Konstantin Komissarchik</a>
  */
 
 public final class GenRepositoryLandingOp extends Operation
